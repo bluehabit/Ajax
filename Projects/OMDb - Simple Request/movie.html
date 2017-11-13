@@ -1,0 +1,13 @@
+//Simple xhr request
+var xhr = new XMLHttpRequest();
+ 
+xhr.onload = function () {
+    if (xhr.status === 200) {
+        console.log(JSON.parse(xhr.response));
+    } else {
+    	console.log('There was an error ' + xhr.status)
+    }
+};
+
+xhr.open('GET', 'http://www.omdbapi.com/?t=star+wars&apikey=c5182e2a');
+xhr.send();
