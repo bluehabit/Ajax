@@ -1,7 +1,16 @@
-<div id='mainContainer'>
+<!DOCTYPE html>
+<html>
+<head>
+	<title>OMDb Search</title>
+	<link rel="stylesheet" href="font-awesome\css\font-awesome.css">
+</head>
+<body>
+	<div id='mainContainer'>
 	<form>
 		<input id='searchBar' type='search'></input>
-		<input id='submitButton' type='submit'></input>
+		<button id='submitButton' type="submit" style="border: 0; background: transparent">
+    		<i class="fa fa-search" aria-hidden="true"></i>
+		</button>
 	</form>
 
 	<div class='movieContainer'>
@@ -13,6 +22,12 @@
 		<p id='plot'>Test</p>
 	</div>
 </div>
+
+
+</body>
+</html>
+
+
 
 <style>
 @import url('https://fonts.googleapis.com/css?family=Lato');
@@ -31,6 +46,14 @@
 	opacity: 1;
 }
 
+button {
+	cursor: pointer;
+}
+
+button:focus {
+	outline:0;
+}
+
 body, input{
 	font-family: 'Lato', sans-serif;
 }
@@ -42,8 +65,22 @@ form {
 	border-bottom: 3px solid #e8217f;
 }
 
-form input#searchBar {
+#submitButton {
+	position: relative;
+	top: 5px;
+}
+
+#searchBar {
 	width: 30%;
+}
+
+.fa-search:before {
+	color: white;
+    content: "\f002";
+    font-size: 1.5em;
+    position: relative;
+    bottom: 4px;
+    border: none;
 }
 
 
@@ -63,6 +100,7 @@ document.getElementById('submitButton').addEventListener('click', function(e){
 	var formValue = document.getElementById('searchBar');
 	var xhr = new XMLHttpRequest();
 	var movieObj;
+	var endPoint; 
 	var apiKey = '&apikey=c5182e2a';
 
 	xhr.onload = function(){
