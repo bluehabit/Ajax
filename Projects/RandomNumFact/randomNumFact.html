@@ -8,6 +8,8 @@
 		<h2>Random Fact About the Number: <span id='generatedNum'></span></h2>
 		<p class='results'></p>
 	</div>
+
+	<button>New Number</button>
 </body>
 </html>
 
@@ -36,23 +38,32 @@ body {
 #generatedNum {
 	color: #e8217f;
 	font-size: 1.2em;
-	padding-left: 15px;
+	padding-left: 8px;
 }
 
 #numContainer .results {
 	padding: 12px;
 	font-size: 1.152em;
-	margin-top: 55px;
+	margin-top: 25px;
 	margin-left: 12px;
+}
+
+button {
+	display: block;
+	margin: 0 auto;
+	cursor: pointer;
+	margin-top: 15px;
+	background-color: #e8217f;
+	color: white;
+	font-family: 'Lato', sans-serif;
+	padding: 15px;
+	border: 2px outset #af2264;
 }
 
 </style>
 
 <script>
 //http://numbersapi.com/03/
-
-//creates a xhr object with built in properties and methods
-
 var randomNumber = randomNum();
 var generatedNumber = document.getElementById('generatedNum');
 var xhr = new XMLHttpRequest();
@@ -65,7 +76,7 @@ xhr.onload = function(){
 		var numberFactString = xhr.response;
 		results.textContent = numberFactString;
 	} else {
-		console.log('There was an error:', xhr.status);
+		results.textContent = 'There was an error: ' + xhr.status;
 	}
 }
 
