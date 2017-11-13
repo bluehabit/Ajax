@@ -58,6 +58,15 @@ button {
 	font-family: 'Lato', sans-serif;
 	padding: 15px;
 	border: 2px outset #af2264;
+	transition: all .35s ease;
+}
+
+button:hover {
+	background-color: #970a4d;
+}
+
+button:focus {
+	outline:0;
 }
 
 </style>
@@ -65,6 +74,8 @@ button {
 <script>
 //http://numbersapi.com/03/
 var randomNumber = randomNum();
+var newNumButton = document.querySelector('button');
+
 var generatedNumber = document.getElementById('generatedNum');
 var xhr = new XMLHttpRequest();
 var results = document.querySelector('.results');
@@ -84,11 +95,30 @@ function randomNum(){
 	return Math.floor(Math.random() * 100) + 1; 
 }
 
-generatedNumber.textContent = randomNumber
+newNumButton.addEventListener('click', function(){
+	var newRandomNumber = randomNum();
+	var xhr = new XMLHttpRequest();
+
+	xhr.onload = function(){
+		if(xhr.status === 200){
+			var numberFactString = xhr.response;
+			results.textContent = numberFactString;
+		} else {
+			results.textContent = 'There was an error: ' + xhr.status;
+		}
+	}
+
+	xhr.open('GET', `http://numbersapi.com/${newRandomNumber}/trivia`)
+	xhr.send();
+
+	generatedNumber.textContent = newRandomNumber;
+});
 
 // xhr.open('GET', 'http://www.omdbapi.com/?t=star+wars&apikey=c5182e2a');
 xhr.open('GET', `http://numbersapi.com/${randomNumber}/trivia`)
 xhr.send();
+
+generatedNumber.textContent = randomNumber;
 
 
 
