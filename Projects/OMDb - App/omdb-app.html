@@ -1,0 +1,97 @@
+<div id='mainContainer'>
+	<form>
+		<input id='searchBar' type='search'></input>
+		<input id='submitButton' type='submit'></input>
+	</form>
+
+	<div id='movieContainer'>
+		<h2 id='movieHeader'></h2>
+		<p id='movieYear'></p>
+		<p id='rated'></p>
+		<p id='released'></p>
+		<p id='runTime'></p>
+		<p id='plot'></p>
+	</div>
+</div>
+
+<style>
+@import url('https://fonts.googleapis.com/css?family=Lato');
+
+#mainContainer {
+	width: 75%;
+	margin: 0 auto;
+}
+
+#movieContainer {
+/*	opacity: 0;*/
+	transition: all .35s ease;
+}
+
+.fullOpacity {
+	opacity: 1;
+}
+
+body, input{
+	font-family: 'Lato', sans-serif;
+}
+
+form {
+	background-color: #1d1d1d;
+	padding: 15px;
+	margin-top: 150px;
+	border-bottom: 3px solid #e8217f;
+}
+
+
+
+</style>
+
+<script>
+//grey 1d1d1d
+//pink e8217f
+
+document.getElementById('submitButton').addEventListener('click', function(e){
+	e.preventDefault();
+	
+	var formValue = document.getElementById('searchBar');
+	var xhr = new XMLHttpRequest();
+	var movieObj;
+	var apiKey = '&apikey=c5182e2a';
+
+	xhr.onload = function(){
+		if (xhr.status === 200){
+			movieObj = JSON.parse(xhr.response);
+			movieContainer.classList.toggle('fullOpacity');
+			printMovie(movieObj)
+			console.log(movieObj)
+		} else {
+			console.log('There was an error ' + xhr.status)
+		}
+	}
+
+	xhr.open('GET', `http://www.omdbapi.com/?t=${formValue.value}${apiKey}`);
+	xhr.send();
+})
+
+function printMovie(movieObj){
+	var movieHeader = document.getElementById('movieHeader'),
+	movieYear = document.getElementById('movieYear'),
+	movieRated = document.getElementById('rated'),
+	movieReleased = document.getElementById('released'),
+	movieRunTime = document.getElementById('runTime'),
+	moviePlot = document.getElementById('plot');
+
+	movieHeader.textContent = movieObj.Title;
+	movieYear.textContent = movieObj.Year;
+	movieRated.textContent = movieObj.Rated;
+	movieReleased.textContent = movieObj.Released;
+	movieRunTime.textContent = movieObj.Runtime;
+	moviePlot.textContent = movieObj.Plot;
+}
+
+//have the list dynamically update as you type characters into the search bar
+//add the movie rating symbols, G, PG, R etc. and dynamically add them depending
+//on movies rating
+//make the results fade in using opacity transition
+
+</script>
