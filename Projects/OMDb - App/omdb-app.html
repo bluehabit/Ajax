@@ -4,13 +4,13 @@
 		<input id='submitButton' type='submit'></input>
 	</form>
 
-	<div id='movieContainer'>
-		<h2 id='movieHeader'></h2>
-		<p id='movieYear'></p>
-		<p id='rated'></p>
-		<p id='released'></p>
-		<p id='runTime'></p>
-		<p id='plot'></p>
+	<div class='movieContainer'>
+		<h2 id='movieHeader'>Test</h2>
+		<p id='movieYear'>Test</p>
+		<p id='rated'>Test</p>
+		<p id='released'>Test</p>
+		<p id='runTime'>Test</p>
+		<p id='plot'>Test</p>
 	</div>
 </div>
 
@@ -22,9 +22,9 @@
 	margin: 0 auto;
 }
 
-#movieContainer {
-/*	opacity: 0;*/
-	transition: all .35s ease;
+.movieContainer {
+	opacity: 0;
+	transition: all .45s ease;
 }
 
 .fullOpacity {
@@ -42,6 +42,9 @@ form {
 	border-bottom: 3px solid #e8217f;
 }
 
+form input#searchBar {
+	width: 30%;
+}
 
 
 </style>
@@ -50,8 +53,12 @@ form {
 //grey 1d1d1d
 //pink e8217f
 
+var movieContainer = document.querySelector('.movieContainer');
+
 document.getElementById('submitButton').addEventListener('click', function(e){
 	e.preventDefault();
+
+	movieContainer.classList= 'movieContainer';
 	
 	var formValue = document.getElementById('searchBar');
 	var xhr = new XMLHttpRequest();
@@ -61,7 +68,7 @@ document.getElementById('submitButton').addEventListener('click', function(e){
 	xhr.onload = function(){
 		if (xhr.status === 200){
 			movieObj = JSON.parse(xhr.response);
-			movieContainer.classList.toggle('fullOpacity');
+			movieContainer.classList.add('fullOpacity');
 			printMovie(movieObj)
 			console.log(movieObj)
 		} else {
