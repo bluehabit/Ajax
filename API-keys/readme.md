@@ -11,4 +11,7 @@ No membership required, endpoint `http://ip-api.com/docs/api:json`
 
 ### Sunrise, Sunset
 https://sunrise-sunset.org/api
+
 example: `https://api.sunrise-sunset.org/json?lat=36.7201600&lng=-4.4203400`
+
+![f](https://imgur.com/yRFW8ER.png)
