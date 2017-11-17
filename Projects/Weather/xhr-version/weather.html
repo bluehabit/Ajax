@@ -1,0 +1,167 @@
+
+<button>click me</button>
+
+<script>
+
+//geocode user IP to latitude/longitude
+// var xhr = new XMLHttpRequest();
+
+// xhr.onload = function(){
+// 	if(xhr.status === 200){
+// 		var geocodeIp = JSON.parse(xhr.response);
+// 		console.log(geocodeIp)
+// 	} else {
+// 		console.log('There was an error ' + xhr.status);
+// 	}
+// }
+
+// xhr.open('GET', 'http://ip-api.com/json');
+// xhr.send();
+
+
+// //Weather Request
+// var weatherXhr = new XMLHttpRequest();
+
+// weatherXhr.onload = function(){
+// 	if(weatherXhr.status === 200){
+// 		var userWeather = JSON.parse(weatherXhr.response);
+// 		console.log(userWeather);
+// 	} else {
+// 		console.log('There was an error ' + weatherXhr.status);
+// 	}
+// }
+
+// weatherXhr.open('GET', `http://api.wunderground.com/api/0f1908c1667bdf37/geolookup/q/33.0812,-96.8133.json`);
+// weatherXhr.send();
+
+//geocode user IP to latitude/longitude
+
+
+//*****************************************************
+// var xhr = new XMLHttpRequest();
+// var weatherXhr = new XMLHttpRequest();
+// var geocodeIp;
+
+// xhr.onload = function(){
+// 	if(xhr.status === 200){
+// 		geocodeIp = JSON.parse(xhr.response);
+		
+// 		weatherXhr.onload = function(){
+// 			if(weatherXhr.status === 200){
+// 				var userWeather = JSON.parse(weatherXhr.response);
+// 				console.log('here we go')
+// 				console.log(userWeather);
+// 			} else {
+// 				console.log('There was an error ' + weatherXhr.status);
+// 			}
+// 		}
+
+// 		weatherXhr.open('GET', `http://api.wunderground.com/api/0f1908c1667bdf37/geolookup/q/${geocodeIp.lat},${geocodeIp.lon}.json`);
+// 		weatherXhr.send();
+
+// 	} else {
+// 		console.log('There was an error ' + xhr.status);
+// 	}
+// }
+
+// xhr.open('GET', 'http://ip-api.com/json');
+// xhr.send();
+//*******************************************************
+
+
+// function geocodeIp(){
+// 	var xhr = new XMLHttpRequest();
+
+// 	xhr.onload = function(progressEvent){
+// 		if(xhr.status === 200){
+// 			var geocodeIp = JSON.parse(xhr.response);
+// 			return coordsToAddress(geocodeIp);
+// 		} else {
+// 			console.log('There was an error ' + xhr.status);
+// 		}
+// 	}
+
+// 	xhr.open('GET', 'http://ip-api.com/json');
+// 	xhr.send();
+// }
+
+// function coordsToAddress(geocodeIp){
+// 	var xhr = new XMLHttpRequest();
+
+// 	xhr.onload = function(){
+// 		if(xhr.status === 200){
+// 			var userWeather = JSON.parse(xhr.response);
+// 			return endPoint(userWeather);
+// 		} else {
+// 			console.log('There was an error ' + xhr.status);
+// 		}
+// 	}
+
+// 	xhr.open('GET', `http://api.wunderground.com/api/0f1908c1667bdf37/geolookup/q/${geocodeIp.lat},${geocodeIp.lon}.json`);
+// 	xhr.send();
+// }
+
+// function endPoint(userWeather){
+// 	var queryURL = userWeather.location.requesturl;
+// 	queryURL = queryURL.replace(/.html/, '.json');
+
+// 	var xhr = new XMLHttpRequest();
+
+// 	xhr.onload = function(){
+// 		if(xhr.status === 200){
+// 			var result = JSON.parse(xhr.response);
+// 			console.log(result);
+// 		} else {
+// 			console.log('There was an error: ' + xhr.status);
+// 		}
+// 	}
+
+// 	xhr.open('GET', `http://api.wunderground.com/api/0f1908c1667bdf37/conditions/q/${queryURL}`);
+// 	xhr.send();
+// }s
+
+// //stick sunset API in here at some point
+
+// geocodeIp();
+
+
+
+///***BELLOW IS CALLBACK VERSION****////
+function geocodeIp(callback){
+	var xhr = new XMLHttpRequest();
+
+	xhr.onload = function(progressEvent){
+		if(xhr.status === 200){
+			var geocodeIp = JSON.parse(xhr.response);
+			return callback(geocodeIp);
+		} else {
+			console.log('There was an error ' + xhr.status);
+		}
+	}
+
+	xhr.open('GET', 'http://ip-api.com/json');
+	xhr.send();
+}
+
+function coordsToAddress(geocodeIp){
+	var xhr = new XMLHttpRequest();
+
+	xhr.onload = function(){
+		if(xhr.status === 200){
+			var userWeather = JSON.parse(xhr.response);
+			console.log(userWeather);
+		} else {
+			console.log('There was an error ' + xhr.status);
+		}
+	}
+
+	xhr.open('GET', `http://api.wunderground.com/api/0f1908c1667bdf37/geolookup/q/${geocodeIp.lat},${geocodeIp.lon}.json`);
+	xhr.send();
+}
+
+geocodeIp(coordsToAddress);
+
+
+
+</script>
+
