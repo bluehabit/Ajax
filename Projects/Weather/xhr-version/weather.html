@@ -68,72 +68,17 @@
 // xhr.send();
 //*******************************************************
 
+var userWeatherObj = {}
 
-// function geocodeIp(){
-// 	var xhr = new XMLHttpRequest();
-
-// 	xhr.onload = function(progressEvent){
-// 		if(xhr.status === 200){
-// 			var geocodeIp = JSON.parse(xhr.response);
-// 			return coordsToAddress(geocodeIp);
-// 		} else {
-// 			console.log('There was an error ' + xhr.status);
-// 		}
-// 	}
-
-// 	xhr.open('GET', 'http://ip-api.com/json');
-// 	xhr.send();
-// }
-
-// function coordsToAddress(geocodeIp){
-// 	var xhr = new XMLHttpRequest();
-
-// 	xhr.onload = function(){
-// 		if(xhr.status === 200){
-// 			var userWeather = JSON.parse(xhr.response);
-// 			return endPoint(userWeather);
-// 		} else {
-// 			console.log('There was an error ' + xhr.status);
-// 		}
-// 	}
-
-// 	xhr.open('GET', `http://api.wunderground.com/api/0f1908c1667bdf37/geolookup/q/${geocodeIp.lat},${geocodeIp.lon}.json`);
-// 	xhr.send();
-// }
-
-// function endPoint(userWeather){
-// 	var queryURL = userWeather.location.requesturl;
-// 	queryURL = queryURL.replace(/.html/, '.json');
-
-// 	var xhr = new XMLHttpRequest();
-
-// 	xhr.onload = function(){
-// 		if(xhr.status === 200){
-// 			var result = JSON.parse(xhr.response);
-// 			console.log(result);
-// 		} else {
-// 			console.log('There was an error: ' + xhr.status);
-// 		}
-// 	}
-
-// 	xhr.open('GET', `http://api.wunderground.com/api/0f1908c1667bdf37/conditions/q/${queryURL}`);
-// 	xhr.send();
-// }s
-
-// //stick sunset API in here at some point
-
-// geocodeIp();
-
-
-
-///***BELLOW IS CALLBACK VERSION****////
-function geocodeIp(callback){
+function geocodeIp(){
 	var xhr = new XMLHttpRequest();
 
 	xhr.onload = function(progressEvent){
 		if(xhr.status === 200){
 			var geocodeIp = JSON.parse(xhr.response);
-			return callback(geocodeIp);
+			userWeatherObj.lat = geocodeIp.lat;
+			userWeatherObj.lon = geocodeIp.lon;
+			return coordsToAddress(geocodeIp);
 		} else {
 			console.log('There was an error ' + xhr.status);
 		}
@@ -149,7 +94,7 @@ function coordsToAddress(geocodeIp){
 	xhr.onload = function(){
 		if(xhr.status === 200){
 			var userWeather = JSON.parse(xhr.response);
-			console.log(userWeather);
+			return endPoint(userWeather);
 		} else {
 			console.log('There was an error ' + xhr.status);
 		}
@@ -159,7 +104,53 @@ function coordsToAddress(geocodeIp){
 	xhr.send();
 }
 
-geocodeIp(coordsToAddress);
+function endPoint(userWeather){
+	var queryURL = userWeather.location.requesturl;
+	queryURL = queryURL.replace(/.html/, '.json');
+
+	var xhr = new XMLHttpRequest();
+
+	xhr.onload = function(){
+		if(xhr.status === 200){
+			var result = JSON.parse(xhr.response);
+			dayNight();
+			console.log(result);
+		} else {
+			console.log('There was an error: ' + xhr.status);
+		}
+	}
+
+	xhr.open('GET', `http://api.wunderground.com/api/0f1908c1667bdf37/conditions/q/${queryURL}`);
+	xhr.send();
+}
+
+function dayNight(){
+	var xhr = new XMLHttpRequest();
+
+	xhr.onload = function(){
+		if(xhr.status === 200){
+			var result = JSON.parse(xhr.response);
+			console.log(result);
+		} else {
+			console.log('There was an error: ' + xhr.status);
+		}
+	}
+
+	xhr.open('GET', `https://api.sunrise-sunset.org/json?lat=${userWeatherObj.lat}&lng=${userWeatherObj.lon}`)
+	xhr.send();
+}
+
+//'https://api.sunrise-sunset.org/json?lat=33.0812&lng=-96.8133'
+//lat: 33.0812,
+//lon: -96.8133,
+
+
+
+geocodeIp();
+
+
+
+
 
 
 
