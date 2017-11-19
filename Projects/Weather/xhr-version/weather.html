@@ -14,6 +14,7 @@
 		<div class='day4'></div>
 		<div class='day5'></div>
 	</div>
+
 <script src='weatherSVG.js'></script>	
 </body>
 </html>
@@ -28,10 +29,35 @@ body {
 	color: white;
 }
 
+.day1, .day2, .day3, .day4, .day5 {
+	width: 19%;
+	height: 255px;
+	float: left;
+	background-color: #3b3740;
+	margin-left: 5px;
+	border-bottom: 4px solid #ef127f;
+}
+
+#forecast {
+	box-sizing: border-box;
+	width: 95%;
+	margin: 0 auto;
+	margin-top: 25%;
+	height: 250px;
+}
+
+#forecast svg {
+	display: block;
+	width: 75px;
+	height: 75px;
+	fill: white;
+	margin: 0 auto;
+	margin-top: 5%;
+}
+
 #currentWeather {
 	width: 50%;
 	margin: 0 auto;
-	margin-top: 10%;
 	height: 300px;
 }
 
@@ -339,6 +365,9 @@ h2 span {
 <script>
 var userWeatherObj = {};
 var currentWeather = document.getElementById('currentWeather');
+var day1 = document.querySelector('.day1');
+var day2 = document.querySelector('.day2');
+
 
 function geocodeIp(){
 	var xhr = new XMLHttpRequest();
@@ -377,12 +406,14 @@ function coordsToAddress(geocodeIp){
 function currentConditions(userWeather){
 	var queryURL = userWeather.location.requesturl;
 	queryURL = queryURL.replace(/.html/, '.json');
+	userWeatherObj.queryURL = queryURL;
 
 	var xhr = new XMLHttpRequest();
 
 	xhr.onload = function(){
 		if(xhr.status === 200){
 			var result = JSON.parse(xhr.response);
+			generateForecast(result);
 			currentWeather.innerHTML += `<h2 class='large'>${result.current_observation.weather}</h2>`;
 			weatherCategory(result.current_observation.icon_url);
 			currentWeather.innerHTML += `<h2><span>It is currently </span> ${result.current_observation.temp_f
@@ -395,6 +426,9 @@ function currentConditions(userWeather){
 
 	xhr.open('GET', `http://api.wunderground.com/api/0f1908c1667bdf37/conditions/q/${queryURL}`);
 	xhr.send();
+}
+
+function generateForecast(result){
 }
 
 function weatherCategory(weatherString){
