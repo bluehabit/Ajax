@@ -8,11 +8,31 @@
 	</div>
 
 	<div id='forecast'>
-		<div class='day1'></div>
-		<div class='day2'></div>
-		<div class='day3'></div>
-		<div class='day4'></div>
-		<div class='day5'></div>
+		<div class='day1 day'>
+			<h3 class='dailyCondition'></h3>
+			<h3 class='dailyTemp'></h3>
+			<div class='SVG'></div>
+		</div>
+		<div class='day2 day'>
+			<h3 class='dailyCondition'></h3>
+			<h3 class='dailyTemp'></h3>
+			<div class='SVG'></div>
+		</div>
+		<div class='day3 day'>
+			<h3 class='dailyCondition'></h3>
+			<h3 class='dailyTemp'></h3>
+			<div class='SVG'></div>
+		</div>
+		<div class='day4 day'>
+			<h3 class='dailyCondition'></h3>
+			<h3 class='dailyTemp'></h3>
+			<div class='SVG'></div>
+		</div>
+		<div class='day5 day'>
+			<h3 class='dailyCondition'></h3>
+			<h3 class='dailyTemp'></h3>
+			<div class='SVG'></div>
+		</div>
 	</div>
 
 <script src='weatherSVG.js'></script>	
@@ -348,6 +368,16 @@ h2 span {
 	color: white;
 }
 
+h3.dailyCondition {
+	text-align: center;
+	color: #d7d1d4;
+}
+
+h3.dailyTemp{
+	text-align: center;
+	color: #181718;
+}
+
 @keyframes snowflake {
 	0%{
 		transform: rotate(180deg);
@@ -367,7 +397,7 @@ h2 span {
 var userWeatherObj = {};
 var currentWeather = document.getElementById('currentWeather');
 var day1 = document.querySelector('.day1');
-var day2 = document.querySelector('.day2');
+var allDays = document.querySelectorAll('.day');
 
 
 function geocodeIp(){
@@ -448,7 +478,25 @@ function generateForecast(){
 				return total;
 			}, []);
 
-			console.log(fiveDayForecast);
+			// day1.innerHTML	= fiveDayForecast[0]
+			console.log(fiveDayForecast[0].conditions);
+			console.log(fiveDayForecast[0].high.fahrenheit);
+			console.log(fiveDayForecast[0].icon_url);
+			//allDays[0].querySelector('h3');
+
+			console.log(fiveDayForecast)
+
+			var currentDayCondition;
+			var currentDayTemp; 
+
+			for(var i = 0; i < allDays.length; i++){
+				currentDayCondition = allDays[i].querySelector('h3.dailyCondition');
+				currentDayCondition.textContent = fiveDayForecast[i].conditions;
+
+				currentDayTemp = allDays[i].querySelector('h3.dailyTemp');
+				currentDayTemp.textContent = fiveDayForecast[i].high.fahrenheit;
+			}
+
 		} else {
 			console.log('There was an error: ' + xhr.status);
 		}
