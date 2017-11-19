@@ -341,6 +341,7 @@ h2 {
 
 h2.large {
 	font-size: 1.65em;
+	letter-spacing: .225em;
 }
 
 h2 span {
@@ -413,12 +414,12 @@ function currentConditions(userWeather){
 	xhr.onload = function(){
 		if(xhr.status === 200){
 			var result = JSON.parse(xhr.response);
-			generateForecast(result);
 			currentWeather.innerHTML += `<h2 class='large'>${result.current_observation.weather}</h2>`;
-			weatherCategory(result.current_observation.icon_url);
+			weatherCategory(result.current_observation.icon_url, currentWeather);
 			currentWeather.innerHTML += `<h2><span>It is currently </span> ${result.current_observation.temp_f
 } <span> in </span>${result.current_observation.display_location.full}</h2>`;
-			console.log(result);
+			// console.log(result);
+			generateForecast();
 		} else {
 			console.log('There was an error: ' + xhr.status);
 		}
@@ -428,10 +429,36 @@ function currentConditions(userWeather){
 	xhr.send();
 }
 
-function generateForecast(result){
+// function between(input, min, max) {
+//   return input >= min && input <= max;
+// }
+
+function generateForecast(){
+	var xhr = new XMLHttpRequest();
+
+	xhr.onload = function(){
+		if(xhr.status === 200){
+			var result = JSON.parse(xhr.response);
+			var forecastArray = result.forecast.simpleforecast.forecastday;
+
+			var fiveDayForecast = forecastArray.reduce(function(total, currentValue, index){
+				if(index >= 1 && index <= 5){
+					total.push(currentValue);
+				}
+				return total;
+			}, []);
+
+			console.log(fiveDayForecast);
+		} else {
+			console.log('There was an error: ' + xhr.status);
+		}
+	}
+
+	xhr.open('GET', `http://api.wunderground.com/api/0f1908c1667bdf37/forecast10day/q/${userWeatherObj.queryURL}`);
+	xhr.send();
 }
 
-function weatherCategory(weatherString){
+function weatherCategory(weatherString, input){
 	var regex_clear = /(clear)|(\bsunny\b)/gi,
 	regex_cloudy = /\bcloudy\b/gi,
 	regex_partlyCloudy = /(mostly)|(partly)/gi
@@ -444,38 +471,38 @@ function weatherCategory(weatherString){
 
 	if(regex_clear.test(weatherString)){
 		if(nightTime.test(weatherString)){
-			currentWeather.innerHTML += nightClearSVG;
+			input.innerHTML += nightClearSVG;
 		} else {
-			currentWeather.innerHTML += clearDaySVG;
+			input.innerHTML += clearDaySVG;
 		}
 	} 
 
 	if(regex_cloudy.test(weatherString)){
-		currentWeather.innerHTML += cloudySVG;
+		input.innerHTML += cloudySVG;
 	} 
 
 	if(regex_partlyCloudy.test(weatherString)){
 		if(nightTime.test(weatherString)){
-			currentWeather.innerHTML += partlyCloudyNightSVG;
+			input.innerHTML += partlyCloudyNightSVG;
 		} else {
-			currentWeather.innerHTML += partlyCloudyDaySVG;
+			input.innerHTML += partlyCloudyDaySVG;
 		}
 	}
 
 	if(regex_fog.test(weatherString)){
-		currentWeather.innerHTML += cloudySVG;
+		input.innerHTML += cloudySVG;
 	} 
 
 	if(regex_rain.test(weatherString)){
-		currentWeather.innerHTML += rainSVG;
+		input.innerHTML += rainSVG;
 	} 
 
 	if(regex_snow.test(weatherString)){
-		currentWeather.innerHTML += snowSVG;
+		input.innerHTML += snowSVG;
 	} 
 
 	if(regex_tstorm.test(weatherString)){
-		currentWeather.innerHTML += tstormSVG;
+		input.innerHTML += tstormSVG;
 	}
 }
 
