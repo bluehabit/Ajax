@@ -1,14 +1,332 @@
-
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Weather App</title>
+</head>
+<body>
+	<div id='currentWeather'>
+	</div>
+<script src='weatherSVG.js'></script>	
+</body>
+</html>
 
 <style>
-	body {
-		background-color: #353333;
+
+@import url('https://fonts.googleapis.com/css?family=Lato');
+
+body {
+	background-color: #191919;
+	font-family: 'Lato', sans-serif;
+	color: white;
+}
+
+#currentWeather {
+	width: 50%;
+	margin: 0 auto;
+	margin-top: 10%;
+	height: 300px;
+}
+
+
+#currentWeather svg {
+	display: block;
+	width: 155px;
+	height: auto;
+	fill: white;
+	margin: 0 auto;
+	margin-top: 5%;
+	animation: fadeIn 4s ease 1;
+	animation-fill-mode: forwards;
+}
+
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
 	}
+
+	to {
+		opacity: 1;
+	}
+}
+
+svg{
+	padding: 55px;
+}
+
+.bolt1 {
+	animation: thunderClap1 ease-in-out 2.2s infinite;
+	transform: translateY(-50px);
+}
+
+.bolt2{
+	animation: thunderClap1 ease-in-out 2.2s infinite;
+	animation-delay: .5s;
+	transform: translateY(25px);
+}
+
+.cloud{
+	animation: cloudBreath 2s ease infinite;
+}
+
+.cloud2{
+	animation: cloudBreath 2.35s ease infinite;
+}
+
+.rainDrop {
+	transform: translateY(63px);
+	transform: translateX(-9px);
+}
+
+.drop1 {
+	animation: rain 1.52s ease infinite;
+}
+
+.drop2 {
+	animation: rain .8s ease infinite;
+}
+
+.drop3 {
+	animation: rain 3.35s ease infinite;
+}
+
+.drop4 {
+	animation: rain 1.22s ease infinite;
+}
+
+.drop5 {
+	animation: rain 2.22s ease infinite;
+}
+
+.drop6 {
+	animation: rain 1.12s ease infinite;
+}
+
+.drop7 {
+	animation: rain 1.82s ease infinite;
+}
+
+.drop8 {
+	animation: rain 1.52s ease infinite;
+}
+
+.drop9 {
+	animation: rain 1.01s ease infinite;
+}
+
+.night-clear {
+	animation: moon 4.01s ease infinite;
+}
+
+.sun-clear {
+	animation: sun 2.45s ease infinite;
+}
+
+.star {
+	animation: star-fade 5.02s ease infinite;
+}
+
+.star2 {
+	animation: star-fade 5.02s ease infinite;
+	animation-delay: 1.02s;
+}
+
+.cir1 {
+	animation: star-fade 8.52s ease infinite;
+	animation-delay: .25s;
+}
+
+.cir2 {
+	animation: star-fade 4.52s ease infinite;
+	animation-delay: .35s;
+}
+
+.cir3 {
+	animation: star-fade 6.52s ease infinite;
+	animation-delay: .05;
+}
+
+.cir4 {
+	animation: star-fade 4.52s ease infinite;
+	animation-delay: .45s;
+}
+
+.cir5 {
+	animation: star-fade 4.52s ease infinite;
+	animation-delay: .45s;
+}
+
+.sunScale {
+	animation: sun-scale 3.52s ease infinite;
+	transform-origin: center;
+}
+
+@keyframes star-fade {
+	0%{
+		opacity: 1;
+	}
+
+	75%{
+		opacity: .2;
+	}
+
+	100%{
+		opacity: 1;
+	}
+}
+
+
+@keyframes moon{
+	0%{
+		transform: scale(1.175);
+		opacity: 1;
+	}
+	25%{
+		opacity: .85;
+	}
+
+	50%{
+		transform: scale(1.2);
+		opacity: .76;
+	}
+
+	100%{
+		transform: scale(1.175);
+		opacity: 1;
+	}
+}
+
+@keyframes sun {
+	0%{
+		transform-origin: center;
+		transform: scale(1.275) rotate(180deg);
+		opacity: 1;
+	}
+	25%{
+		opacity: .85;
+	}
+
+	50%{
+		transform: scale(1.2);
+		opacity: .76;
+	}
+
+	100%{
+		transform: scale(1.275) rotate(360deg);
+		opacity: 1;
+	}
+}
+
+@keyframes sun-scale {
+	0%{
+		transform: scale(1);
+	}
+	55%{
+		transform: scale(1.32);
+	}
+	100%{
+		transform: scale(1);
+	}
+}
+
+
+
+@keyframes rain {
+	0%{
+		opacity: 0;
+	}
+
+	32%{
+		opacity: 1;
+	}
+
+	41%{
+		opacity: .55;
+	}
+
+	100%{
+		opacity: 0;
+		transform: translateX(-25px) translateY(170px);
+	}
+}
+
+@keyframes cloudBreath{
+	0%{
+		transform: scale(1.12);
+	}
+	50%{
+		transform: scale(1.2);
+	}
+	100%{
+		transform: scale(1.12);
+	}
+}
+
+@keyframes thunderClap1 {
+	0%, 31%, 35%, 40%{
+		opacity: 0;
+	}
+
+	32%{
+		opacity: 1;
+	}
+
+	41%{
+		opacity: .55;
+	}
+	100%{
+		opacity: 0;
+		transform: translateX(50px);
+		transform: translateY(70px);
+	}
+}
+
+.snowflake1, .snowflake2, .snowflake3 {
+	animation: snowflake 3s ease infinite;
+	transform-origin: center;
+}
+
+  
+.snowflake3 {
+	animation: snowflake 3s ease infinite;
+    animation-delay: .34s;
+	transform-origin: center;
+}
+  
+ .snowflake2 {
+	animation: snowflake 3s ease infinite;
+  animation-delay: .48s;
+	transform-origin: center;
+}
+
+h2 {
+	text-align: center;
+	text-transform: uppercase;
+	color: #ef127f;
+}
+
+h2 span {
+	color: white;
+}
+
+@keyframes snowflake {
+	0%{
+		transform: rotate(180deg);
+	}
+
+	95% {
+		transform: rotate(395deg) translate(130px, 120px) scale(.69);
+	}
+  100%{
+    opacity: 0;
+  }
+}
+
 </style>
 
 <script>
-
-var userWeatherObj = {}
+var userWeatherObj = {};
+var currentWeather = document.getElementById('currentWeather');
 
 function geocodeIp(){
 	var xhr = new XMLHttpRequest();
@@ -34,7 +352,7 @@ function coordsToAddress(geocodeIp){
 	xhr.onload = function(){
 		if(xhr.status === 200){
 			var userWeather = JSON.parse(xhr.response);
-			return endPoint(userWeather);
+			return currentConditions(userWeather);
 		} else {
 			console.log('There was an error ' + xhr.status);
 		}
@@ -53,7 +371,12 @@ function currentConditions(userWeather){
 	xhr.onload = function(){
 		if(xhr.status === 200){
 			var result = JSON.parse(xhr.response);
+			currentWeather.innerHTML = `<h2>${result.current_observation.weather}</h2>`;
+			weatherCategory(result.current_observation.icon_url);
+			currentWeather.innerHTML += `<h2><span>It is currently </span> ${result.current_observation.temp_f
+} <span> in </span>${result.current_observation.display_location.full}</h2>`;
 			console.log(result);
+			userWeatherObj.temperature = result.current_observation.temp_f
 		} else {
 			console.log('There was an error: ' + xhr.status);
 		}
@@ -65,7 +388,8 @@ function currentConditions(userWeather){
 
 function weatherCategory(weatherString){
 	var regex_clear = /(clear)|(\bsunny\b)/gi,
-	regex_cloudy = /(cloudy)|(mostlysunny)|(partlysunny)/gi,
+	regex_cloudy = /\bcloudy\b/gi,
+	regex_partlyCloudy = /(mostly)|(partly)/gi
 	regex_fog = /(fog)|(hazy)/gi,
 	regex_rain = /(chancerain)|(rain)/gi,
 	regex_snow = /(flurries)|(sleet)|(snow)/gi,
@@ -74,32 +398,43 @@ function weatherCategory(weatherString){
 	var nightTime = /(nt_)/;
 
 	if(regex_clear.test(weatherString)){
-		userWeatherObj.weatherCategory = 'clear';
-	} else if(regex_cloudy.test(weatherString)){
-		userWeatherObj.weatherCategory = 'cloudy';
-	} else if(regex_fog.test(weatherString)){
-		userWeatherObj.weatherCategory = 'fog';
-	} else if(regex_rain.test(weatherString)){
-		userWeatherObj.weatherCategory = 'rain';
-	} else if(regex_snow.test(weatherString)){
-		userWeatherObj.weatherCategory = 'snow';
-	} else if(regex_tstorm.test(weatherString)){
-		userWeatherObj.weatherCategory = 'tstorm';
+		if(nightTime.test(weatherString)){
+			currentWeather.innerHTML = nightClearSVG;
+		} else {
+			currentWeather.innerHTML = clearDaySVG;
+		}
+	} 
+
+	if(regex_cloudy.test(weatherString)){
+		currentWeather.innerHTML = cloudySVG;
+	} 
+
+	if(regex_partlyCloudy.test(weatherString)){
+		if(nightTime.test(weatherString)){
+			currentWeather.innerHTML += partlyCloudyNightSVG;
+		} else {
+			currentWeather.innerHTML += partlyCloudyDaySVG;
+		}
 	}
 
-	if(nightTime.test(weatherString)){
-		userWeatherObj.nightime = true;
-	} else {
-		userWeatherObj.nightime = false;
-	}
+	if(regex_fog.test(weatherString)){
+		currentWeather.innerHTML = cloudySVG;
+	} 
 
-	return userWeatherObj;
+	if(regex_rain.test(weatherString)){
+		currentWeather.innerHTML = rainSVG;
+	} 
+
+	if(regex_snow.test(weatherString)){
+		currentWeather.innerHTML = snowSVG;
+	} 
+
+	if(regex_tstorm.test(weatherString)){
+		currentWeather.innerHTML = tstormSVG;
+	}
 }
 
 geocodeIp();
-
-
-
 
 
 </script>
