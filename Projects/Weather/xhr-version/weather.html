@@ -497,7 +497,7 @@ function currentConditions(userWeather){
 			currentWeather.innerHTML += `<h2 class='large'>${result.current_observation.weather}</h2>`;
 			weatherCategory(result.current_observation.icon_url, currentWeather);
 			currentWeather.innerHTML += `<h2><span>It is currently </span> ${result.current_observation.temp_f
-} <span> in </span>${result.current_observation.display_location.full}</h2>`;
+} <span> &deg; F in  </span>${result.current_observation.display_location.full}</h2>`;
 			generateForecast();
 		} else {
 			console.log('There was an error: ' + xhr.status);
