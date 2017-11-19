@@ -8,29 +8,34 @@
 	</div>
 
 	<div id='forecast'>
-		<div class='day1 day'>
+		<div class='day day1'>
 			<h3 class='dailyCondition'></h3>
 			<h3 class='dailyTemp'></h3>
+			<h3 class='dailyDay'></h3>
 			<div class='SVG'></div>
 		</div>
-		<div class='day2 day'>
+		<div class='day day2'>
 			<h3 class='dailyCondition'></h3>
 			<h3 class='dailyTemp'></h3>
+			<h3 class='dailyDay'></h3>
 			<div class='SVG'></div>
 		</div>
-		<div class='day3 day'>
+		<div class='day day3'>
 			<h3 class='dailyCondition'></h3>
 			<h3 class='dailyTemp'></h3>
+			<h3 class='dailyDay'></h3>
 			<div class='SVG'></div>
 		</div>
-		<div class='day4 day'>
+		<div class='day day4'>
 			<h3 class='dailyCondition'></h3>
 			<h3 class='dailyTemp'></h3>
+			<h3 class='dailyDay'></h3>
 			<div class='SVG'></div>
 		</div>
-		<div class='day5 day'>
+		<div class='day day5'>
 			<h3 class='dailyCondition'></h3>
 			<h3 class='dailyTemp'></h3>
+			<h3 class='dailyDay'></h3>
 			<div class='SVG'></div>
 		</div>
 	</div>
@@ -49,30 +54,71 @@ body {
 	color: white;
 }
 
-.day1, .day2, .day3, .day4, .day5 {
+.day {
 	width: 19%;
 	height: 255px;
 	float: left;
 	background-color: #3b3740;
 	margin-left: 5px;
 	border-bottom: 4px solid #ef127f;
+	transition: all .25s ease;
+	position: relative;
+	bottom: -85px;
 }
+
+@keyframes dayPanel {
+	0%{
+		opacity: 0;
+	}
+	100%{
+		opacity: 1;
+		bottom: 0px;
+	}
+}
+
+.day1 {
+	animation: dayPanel .65s ease-in-out 1 forwards;
+}
+
+.day2 {
+	animation: dayPanel .65s ease-in-out 1 forwards;
+	animation-delay: .2s;
+}
+
+.day3 {
+	animation: dayPanel .65s ease-in-out 1 forwards;
+	animation-delay: .3s;
+}
+
+.day4 {
+	animation: dayPanel .65s ease-in-out 1 forwards;
+	animation-delay: .4s;
+}
+
+.day5 {
+	animation: dayPanel .65s ease-in-out 1 forwards;
+	animation-delay: .5s;
+}
+
+
+
 
 #forecast {
 	box-sizing: border-box;
 	width: 95%;
 	margin: 0 auto;
-	margin-top: 25%;
+	margin-top: 15%;
 	height: 250px;
 }
 
-#forecast svg {
+.day svg {
 	display: block;
 	width: 75px;
 	height: 75px;
 	fill: white;
 	margin: 0 auto;
-	margin-top: 5%;
+	position: relative;
+	bottom: 55px;
 }
 
 #currentWeather {
@@ -80,7 +126,6 @@ body {
 	margin: 0 auto;
 	height: 300px;
 }
-
 
 #currentWeather svg {
 	display: block;
@@ -373,7 +418,12 @@ h3.dailyCondition {
 	color: #d7d1d4;
 }
 
-h3.dailyTemp{
+h3.dailyTemp {
+	text-align: center;
+	color: #181718;
+}
+
+h3.dailyDay{
 	text-align: center;
 	color: #181718;
 }
@@ -448,7 +498,6 @@ function currentConditions(userWeather){
 			weatherCategory(result.current_observation.icon_url, currentWeather);
 			currentWeather.innerHTML += `<h2><span>It is currently </span> ${result.current_observation.temp_f
 } <span> in </span>${result.current_observation.display_location.full}</h2>`;
-			// console.log(result);
 			generateForecast();
 		} else {
 			console.log('There was an error: ' + xhr.status);
@@ -459,9 +508,6 @@ function currentConditions(userWeather){
 	xhr.send();
 }
 
-// function between(input, min, max) {
-//   return input >= min && input <= max;
-// }
 
 function generateForecast(){
 	var xhr = new XMLHttpRequest();
@@ -478,20 +524,22 @@ function generateForecast(){
 				return total;
 			}, []);
 
-			// day1.innerHTML	= fiveDayForecast[0]
-			console.log(fiveDayForecast[0].conditions);
-			console.log(fiveDayForecast[0].high.fahrenheit);
-			console.log(fiveDayForecast[0].icon_url);
-			//allDays[0].querySelector('h3');
-
-			console.log(fiveDayForecast)
-
 			var currentDayCondition;
 			var currentDayTemp; 
+			var currentDaySVG; 
+			var dayOfWeek; 
+
+			console.log(fiveDayForecast)
 
 			for(var i = 0; i < allDays.length; i++){
 				currentDayCondition = allDays[i].querySelector('h3.dailyCondition');
 				currentDayCondition.textContent = fiveDayForecast[i].conditions;
+
+				currentDaySVG = allDays[i].querySelector('.SVG');
+				weatherCategory(fiveDayForecast[i].icon_url, currentDaySVG);
+
+				dayOfWeek = allDays[i].querySelector('.dailyDay')
+				dayOfWeek.textContent = fiveDayForecast[i].date.weekday;
 
 				currentDayTemp = allDays[i].querySelector('h3.dailyTemp');
 				currentDayTemp.textContent = fiveDayForecast[i].high.fahrenheit;
@@ -553,6 +601,7 @@ function weatherCategory(weatherString, input){
 		input.innerHTML += tstormSVG;
 	}
 }
+
 
 geocodeIp();
 
