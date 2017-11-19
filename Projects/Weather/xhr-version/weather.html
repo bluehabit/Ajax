@@ -6,6 +6,14 @@
 <body>
 	<div id='currentWeather'>
 	</div>
+
+	<div id='forecast'>
+		<div class='day1'></div>
+		<div class='day2'></div>
+		<div class='day3'></div>
+		<div class='day4'></div>
+		<div class='day5'></div>
+	</div>
 <script src='weatherSVG.js'></script>	
 </body>
 </html>
@@ -305,6 +313,10 @@ h2 {
 	color: #ef127f;
 }
 
+h2.large {
+	font-size: 1.65em;
+}
+
 h2 span {
 	color: white;
 }
@@ -371,12 +383,11 @@ function currentConditions(userWeather){
 	xhr.onload = function(){
 		if(xhr.status === 200){
 			var result = JSON.parse(xhr.response);
-			currentWeather.innerHTML = `<h2>${result.current_observation.weather}</h2>`;
+			currentWeather.innerHTML += `<h2 class='large'>${result.current_observation.weather}</h2>`;
 			weatherCategory(result.current_observation.icon_url);
 			currentWeather.innerHTML += `<h2><span>It is currently </span> ${result.current_observation.temp_f
 } <span> in </span>${result.current_observation.display_location.full}</h2>`;
 			console.log(result);
-			userWeatherObj.temperature = result.current_observation.temp_f
 		} else {
 			console.log('There was an error: ' + xhr.status);
 		}
@@ -399,14 +410,14 @@ function weatherCategory(weatherString){
 
 	if(regex_clear.test(weatherString)){
 		if(nightTime.test(weatherString)){
-			currentWeather.innerHTML = nightClearSVG;
+			currentWeather.innerHTML += nightClearSVG;
 		} else {
-			currentWeather.innerHTML = clearDaySVG;
+			currentWeather.innerHTML += clearDaySVG;
 		}
 	} 
 
 	if(regex_cloudy.test(weatherString)){
-		currentWeather.innerHTML = cloudySVG;
+		currentWeather.innerHTML += cloudySVG;
 	} 
 
 	if(regex_partlyCloudy.test(weatherString)){
@@ -418,19 +429,19 @@ function weatherCategory(weatherString){
 	}
 
 	if(regex_fog.test(weatherString)){
-		currentWeather.innerHTML = cloudySVG;
+		currentWeather.innerHTML += cloudySVG;
 	} 
 
 	if(regex_rain.test(weatherString)){
-		currentWeather.innerHTML = rainSVG;
+		currentWeather.innerHTML += rainSVG;
 	} 
 
 	if(regex_snow.test(weatherString)){
-		currentWeather.innerHTML = snowSVG;
+		currentWeather.innerHTML += snowSVG;
 	} 
 
 	if(regex_tstorm.test(weatherString)){
-		currentWeather.innerHTML = tstormSVG;
+		currentWeather.innerHTML += tstormSVG;
 	}
 }
 
