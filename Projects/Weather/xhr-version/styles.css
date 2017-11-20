@@ -399,9 +399,15 @@ h3.dailyDay{
 @media only screen and (max-width : 940px){
 	.day {
 		float: none;
-		width: 75%;
+		width: 62%;
 		height: 225px;
 		margin: 0 auto;
+		padding: 4px;
+		margin-top: 12px;
+	}
+
+	.day svg {
+		bottom: 71px;
 	}
 
 	.day1 {
