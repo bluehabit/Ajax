@@ -1,0 +1,119 @@
+<script>
+class PromiseSimple {
+    //creating a callback function parameter
+    constructor(callback) {
+      this.promiseChain = [];
+      this.handleError = function(){}
+
+      this.onResolve = function(value) {
+        //value is the user profile data object 
+        try {
+        //this block calls all the function definitions
+        //within the promiseChain array
+        this.promiseChain.forEach(function(nextFunction){
+            value = nextFunction(value);
+        });
+        } catch (error) {
+          //if it fails set promiseChain array to empty
+          this.promiseChain = [];
+          this.onReject(error);
+        }
+      }
+
+      this.onReject = function(error) {
+        this.handleError(error);
+      }
+
+      callback(this.onResolve.bind(this), this.onReject.bind(this));
+    }
+
+    //prototype methods
+    //changed parameter onResolve name to functionDefinition
+    //so it makes more sense.
+    then(functionDefinition) {
+      //this represents PromiseSimple object
+      //onResolve represents function definition pass through
+      //in makeApiCall.then()
+      //.then(function(user){
+      // console.log('In the first .then()');
+      // return user;
+      // })
+
+      //onResolve is a function definition
+      //we push the function definition to the promiseChain
+      this.promiseChain.push(functionDefinition);
+      return this;
+      //not sure why it has return this?
+    }
+
+    catch(handleError) {
+      this.handleError = handleError;
+      return this;
+    }
+  }
+  // -------------end PromiseSimple class--------------
+
+  function fakeApiBackend() {
+      var user = {
+      username: 'treyhuffine',
+      favoriteNumber: 42,
+      profile: 'https://gitconnected.com/treyhuffine'
+  }
+    if (Math.random() > .05) {
+      return { 
+        data: user, 
+        statusCode: 200,
+      };
+    } else {
+      var error = {
+        statusCode: 404,
+        message: 'Could not find user',
+        error: 'Not Found',
+      };
+      
+      return error;
+    }
+  };
+
+  function makeApiCall(){
+      return new PromiseSimple(function(resolve, reject){
+      setTimeout(function(){
+        var apiResponse = fakeApiBackend();
+
+        if (apiResponse.statusCode >= 400) {
+          reject(apiResponse);
+        } else {
+          resolve(apiResponse.data);
+        }
+      }, 4000)
+    });
+  }
+
+  makeApiCall()
+    //user is github profile data
+    .then(function(user){
+    console.log('In the first .then()');
+    return user;
+    })
+    .then(function(user){
+      console.log(`User ${user.username}'s favorite number is ${user.favoriteNumber}`);
+      return user;
+    })
+    .then(function(user){
+      console.log('The previous .then() told you the favoriteNumber')
+      return user.profile;
+    })
+    .then(function(profile){
+      console.log(`The profile URL is ${profile}`);
+    })
+    .then(function(){
+      console.log('This is the last then()');
+    })
+    .catch(function(error){
+       console.log(error.message);
+})
+
+// from:
+// https://levelup.gitconnected.com/understand-javascript-promises-by-building-a-promise-from-scratch-84c0fd855720
+</script>
+
