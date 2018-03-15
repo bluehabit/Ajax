@@ -1,1 +1,289 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Friends IndexedDB</title>
+</head>
+<body>
+	<h1>IndexedDB Friends List</h1>
+	<div class='mainContainer'>
+		<h3>Add Friend</h3>
+		<input id='addItem' type="text">
+		<button id='addItemButton'>add</button>
 
+		<h3>Friends</h3>
+		<ul id='friendContainer'>
+			<!-- <li>
+				<label>Joey</label>
+				<input class='editMode' type='text'>
+				<button class='edit'>edit</button>
+				<button class='delete'>delete</button>
+			</li>
+		</ul>
+
+		<ul id='friendContainer'>
+			<li>
+				<label>Rachel</label>
+				<input class='editMode' type='text'>
+				<button class='edit'>edit</button>
+				<button class='delete'>delete</button>
+			</li> -->
+		</ul>
+	</div>
+</body>
+</html>
+
+<style>
+	@import url('https://fonts.googleapis.com/css?family=Lato');
+
+	body {
+		font-family: 'Lato', sans-serif;
+	}
+
+	h3 {
+		border-bottom: 2px solid black;
+		display: block;
+	}
+
+	.mainContainer {
+		max-width: 70%;
+		margin: 0 auto;
+		margin-top: 15%;
+	}
+
+
+	ul li {
+		list-style: none;
+		padding-bottom: 25px;
+		padding-top: 5px;
+		border-bottom: 1px solid #d8d9da;
+	}
+
+	ul li button {
+		float: right;
+	}
+
+	button {
+		margin-right: 5px;
+		background-color: #e02280;
+		border: none;
+		padding: 8px;
+		border: 2px solid #c6c6c6;
+		color: white;
+		font-size: 12px;
+		text-transform: uppercase;
+		transition: all .2s ease;
+	}
+
+	button:hover{
+		background-color: #f66eab;
+	}
+
+	label {
+		font-size: 1.2em;
+		color: #24262a;
+	}
+
+	input {
+		border: 1.3px solid #cbcbcb;
+		border-radius: 6px;
+		font-family: 'Lato', sans-serif;
+	}
+
+	textarea:focus, input:focus{
+	    outline: none;
+	}
+
+	.editMode {
+		visibility: hidden;
+	}
+
+	h1 {
+		text-align: center;
+	}
+</style>
+
+<script>
+
+var friendContainer = document.getElementById('friendContainer');
+var db;
+
+var addFriendInput = document.getElementById('addItem'),
+addFriendButton = document.getElementById('addItemButton');
+
+var friendsData = [
+	{
+		name:'Ross',
+		email: 'Ross@gmail.com',
+		phone: '723-222-4533'
+	},
+	{
+		name:'Rachel',
+		email: 'Rachel@hotmail.com',
+		phone: '214-333-4910'
+	},
+	{
+		name:'Joey',
+		email: 'Joey@yahoo.com',
+		phone: '340-330-8004'
+	},
+	{
+		name:'Phoebe',
+		email: 'Phoebe@outlook.com',
+		phone: '530-320-1830'
+	},
+	{
+		name:'Chandler',
+		email:'Chandler@bing.com',
+		phone: '694-309-3821'
+	}, 
+	{
+		name:'Monica',
+		email:'Monica@ilikefood.com',
+		phone: '222-312-9283'
+	}
+]
+
+var openRequest = window.indexedDB.open('friendsDB', 1);
+
+openRequest.onsuccess = function(event){
+	db = event.target.result;
+	readList(db);
+	// read1(db);
+}
+
+openRequest.onerror = function(event){
+	console.log(event.target.errorCode);
+}
+
+openRequest.onupgradeneeded = function(event){
+	db = event.target.result; 
+	var objectStore = db.createObjectStore('centralPerk', { autoIncrement: true, keyPath: 'mykey' });
+
+	for(var prop in friendsData){
+		objectStore.add(friendsData[prop]);
+	}
+}
+
+function addFriend(friend){
+	// console.log(friend)
+	// console.log(friend.name)
+	
+	var newLi = document.createElement('li');
+	//when adding items to the database I use the mykey objectstore
+	//generator and add it to the new li's dataset to 'link' it
+	//to the database 
+	newLi.dataset.myKey = friend.mykey;
+
+	var label = document.createElement('label');
+	label.innerText = friend.name;
+
+	var inputText = document.createElement('input');
+	inputText.type ='text';
+	inputText.classList.add('editMode');
+
+	var editButton = document.createElement('button');
+	editButton.classList.add('edit');
+	editButton.innerText = 'edit';
+
+	var deleteButton = document.createElement('button');
+	deleteButton.classList.add('delete');
+	deleteButton.innerText = 'delete';
+
+	newLi.append(label);
+	newLi.append(inputText);
+	newLi.append(editButton);
+	newLi.append(deleteButton);
+
+	friendContainer.appendChild(newLi);
+}
+
+function readList(db){
+	var transaction = db.transaction('centralPerk', 'readwrite');
+	var objectStore = transaction.objectStore('centralPerk');
+	var request = objectStore.getAll();
+
+	request.onerror = function(event){
+		console.log('Unable to get data');
+	}
+
+	request.onsuccess = function(event){
+		if(request.result) {
+		   console.log('the request is', request.result)
+		   request.result.forEach(function(friend){
+		   	 addFriend(friend)
+		   })
+
+		   bindEvents();
+           return request.result; 
+       	}
+	}
+}
+
+function bindEvents(){
+	var htmlCollection = friendContainer.children;
+	var friendArray = Array.from(htmlCollection);
+
+	friendArray.forEach(function(friend){
+		var deleteButton = friend.querySelector('button.delete')
+		var editButton = friend.querySelector('button.edit');
+
+		deleteButton.addEventListener('click', function(){
+			deleteFriend(this);
+		});
+
+		editButton.addEventListener('click', function(){
+			editFriend(this);
+		});
+	})
+}
+
+
+function dbAddFriend(friendName){
+	var request = db.transaction('centralPerk', 'readwrite')
+	.objectStore("centralPerk")
+	.add({name: friendName, email: undefined});
+
+	request.onsuccess = function(event) {
+      console.log(friendName, "has been added to your database.");
+      bindEvents();
+   	};
+   
+   request.onerror = function(event) {
+      console.log("Unable to add data");
+   }
+}
+
+function deleteFriend(friend){
+	console.log("your friend delete button", friend.parentElement)
+}
+
+
+addFriendButton.addEventListener('click', function(){
+	if(addFriendInput.value){
+		dbAddFriend(addFriendInput.value);
+		addFriend({name:addFriendInput.value});
+		addFriendInput.value = '';
+	} else {
+		alert('Please Enter a Value to Submit');
+	}
+})
+
+
+// function read1(db){
+// 	var transaction = db.transaction('centralPerk', 'readwrite');
+// 	var objectStore = transaction.objectStore('centralPerk');
+// 	var request = objectStore.get(1);
+
+// 	request.onerror = function(event){
+// 		console.log('Unable to get data');
+// 	}
+
+// 	request.onsuccess = function(event){
+// 		if(request.result) {
+// 			console.log(request.result, 'is at place 1')
+//        	}
+// 	}
+// }
+
+
+</script>
