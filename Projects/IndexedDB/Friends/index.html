@@ -148,7 +148,6 @@ var openRequest = window.indexedDB.open('friendsDB', 1);
 openRequest.onsuccess = function(event){
 	db = event.target.result;
 	readList(db);
-	// read1(db);
 }
 
 openRequest.onerror = function(event){
@@ -172,7 +171,7 @@ function addFriend(friend){
 	//when adding items to the database I use the mykey objectstore
 	//generator and add it to the new li's dataset to 'link' it
 	//to the database 
-	newLi.dataset.myKey = friend.mykey;
+	newLi.dataset.mykey = friend.mykey;
 
 	var label = document.createElement('label');
 	label.innerText = friend.name;
@@ -240,50 +239,64 @@ function bindEvents(){
 
 function dbAddFriend(friendName){
 	var request = db.transaction('centralPerk', 'readwrite')
-	.objectStore("centralPerk")
+	.objectStore('centralPerk')
 	.add({name: friendName, email: undefined});
 
 	request.onsuccess = function(event) {
-      console.log(friendName, "has been added to your database.");
-      bindEvents();
+      var primaryKey = event.target.result;
+
+      //opening IDBrequest
+      var request = db.transaction('centralPerk', 'readwrite')
+      .objectStore('centralPerk')
+      .get(primaryKey);
+
+      //handling request, render newly added object to the DOM
+      request.onsuccess = function(event){
+      	var newFriend = event.target.result;
+      	console.log(newFriend, 'new friend')
+      	addFriend(newFriend);
+      }
    	};
    
    request.onerror = function(event) {
       console.log("Unable to add data");
    }
+
+   bindEvents();
 }
 
 function deleteFriend(friend){
-	console.log("your friend delete button", friend.parentElement)
-}
+	var child = friend.parentElement,
+	parent = child.parentElement;
+	primaryKey = child.dataset.mykey,
+	primaryKey = Number(primaryKey);
+	console.log(primaryKey);
+	
+	console.log(child)
 
+	// parent.removeChild(child)
+
+	//new request
+	var request = db
+	  .transaction('centralPerk', 'readwrite')
+	  .objectStore('centralPerk')
+	  .delete(primaryKey);
+
+	//handle IDBrequest
+	request.onsuccess = function(event){
+		console.log('removed from database')
+		parent.removeChild(child);
+	}
+}
 
 addFriendButton.addEventListener('click', function(){
 	if(addFriendInput.value){
 		dbAddFriend(addFriendInput.value);
-		addFriend({name:addFriendInput.value});
 		addFriendInput.value = '';
 	} else {
 		alert('Please Enter a Value to Submit');
 	}
 })
-
-
-// function read1(db){
-// 	var transaction = db.transaction('centralPerk', 'readwrite');
-// 	var objectStore = transaction.objectStore('centralPerk');
-// 	var request = objectStore.get(1);
-
-// 	request.onerror = function(event){
-// 		console.log('Unable to get data');
-// 	}
-
-// 	request.onsuccess = function(event){
-// 		if(request.result) {
-// 			console.log(request.result, 'is at place 1')
-//        	}
-// 	}
-// }
 
 
 </script>
