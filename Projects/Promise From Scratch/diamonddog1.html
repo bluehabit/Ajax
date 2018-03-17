@@ -1,0 +1,102 @@
+<script>
+
+class SimplePromise{
+	constructor(callback){
+		this.promiseChain = [];
+		this.handleError = function(){};
+
+		//async components, remember all async components must
+		//be a callback
+		this.onResolve = function(userObj){
+			this.promiseChain.forEach(function(functionDefinition){
+				userObj = functionDefinition(userObj);
+			})
+		}
+
+		this.onReject = function(error){
+			this.handleError(error)
+		}
+
+		//opening the box
+		callback(this.onResolve.bind(this), this.onReject.bind(this));
+	}
+	//proto 
+	then(functionDefinition) {
+    	this.promiseChain.push(functionDefinition);
+    	return this;
+  }
+
+	catch(functionDefinition){
+		this.handleError = functionDefinition;
+		return this;
+	}
+}
+
+function makeApiCall(){
+	var apiRequest = fakeBackEnd();
+	return new SimplePromise(function(resolve, reject){
+		//async stuff here
+		setTimeout(function(){
+			//resolve and reject
+			if(apiRequest.statusCode === 200){
+				resolve(apiRequest.data);
+			} 
+
+			if(apiRequest.statusCode >= 400){
+				reject(apiRequest);
+			}
+		}, 2000)
+	})
+}
+
+function fakeBackEnd(){
+	var user = {
+		name: 'Chris',
+		favoriteNumber: 7,
+		profile: 'http://www.github.com/bluehabit'
+	}
+
+	var randomNumber = Math.random();
+	if(randomNumber > .01){
+		return {
+			data: user,
+			statusCode: 200
+		}
+	} else {
+		var error = {
+			message: 'there was an error',
+			statusCode: 404
+		}
+		return error;
+	}
+}
+
+
+var a = makeApiCall()
+  .then(function(user){
+  console.log('In the first .then()');
+    return user;
+  })
+  .then(function(user){
+    console.log(`User ${user.username}'s favorite number is ${user.favoriteNumber}`);
+    return user;
+  })
+  .then(function(user){
+    console.log('The previous .then() told you the favoriteNumber');
+    console.log('test', user.profile)
+    return user.profile;
+  })
+  .then(function(profile){
+    console.log(`The profile URL is ${profile}`);
+  })
+  .then(function(){
+    console.log('This is the last then()');
+  })
+  .catch(function(error){
+     console.log(error.message);
+})
+
+// console.log(a)
+
+
+</script>
