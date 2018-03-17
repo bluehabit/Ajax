@@ -194,6 +194,7 @@ function addFriend(friend){
 	newLi.append(deleteButton);
 
 	friendContainer.appendChild(newLi);
+	bindEvents();
 }
 
 function readList(db){
@@ -289,6 +290,40 @@ function deleteFriend(friend){
 	}
 }
 
+function editFriend(friend){
+	console.log(friend)
+	var parent = friend.parentElement;
+	var label = parent.querySelector('label');
+	var inputText = parent.querySelector("input[type='text'");
+	inputText.classList.toggle('editMode');
+
+	console.log('click')
+	//triggers 6 times, why?
+
+	if(inputText.value){
+		var primaryKey = parent.dataset.mykey;
+		primaryKey = Number(primaryKey);
+		label.innerText = inputText.value
+
+		// request transaction
+		updateRecord(db, label.innerText, primaryKey);
+	}
+}
+
+function updateRecord(db, friendName, key){
+  console.log(key)
+  var request = db
+    .transaction('centralPerk', 'readwrite')
+    .objectStore('centralPerk')
+    .put({name: friendName, mykey: key});
+
+  request.onsuccess = function(event){
+    console.log('success');
+    console.log(event.target.result, 'result')
+    console.log(event.target, 'target')
+  } 
+}
+
 addFriendButton.addEventListener('click', function(){
 	if(addFriendInput.value){
 		dbAddFriend(addFriendInput.value);
@@ -297,6 +332,7 @@ addFriendButton.addEventListener('click', function(){
 		alert('Please Enter a Value to Submit');
 	}
 })
+
 
 
 </script>
