@@ -8,3 +8,7 @@ Using `put` to update **specific** properties on an object. If you do not config
 
 ## After
 ![f](https://imgur.com/WdXtZFW.png)
+
+
+## Notice uses `destructuring assignment` aka `binding pattern` as shown below
+![f](https://imgur.com/6CvdYnz.png)
