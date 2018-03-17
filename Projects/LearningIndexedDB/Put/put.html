@@ -52,17 +52,22 @@ openRequest.onupgradeneeded = function(event) {
   }
 };
 
+//notice how we nest a bunch of functions here
+//getRequest is nested within openRequest so on so fort
 function updateData(dataObj, key){
 	var openRequest = window.indexedDB.open('friendsDB', 1);
 	var {name, email, phone} = dataObj;
 
 	openRequest.onsuccess = function(event){
 		var db = event.target.result;
+
+		//new transaction
 		var getRequest = db
 			.transaction('centralPark', 'readwrite')
 			.objectStore('centralPark')
 			.get(key)
 
+		//handle IDBrequest object
 		getRequest.onsuccess = function(event){
 			var objectRecord = event.target.result;
 
@@ -70,11 +75,13 @@ function updateData(dataObj, key){
 			if(email){objectRecord.email = email;}
 			if(phone){objectRecord.phone = phone;}
 
+			//new transaction
 			var putRequest = db
 			.transaction('centralPark', 'readwrite')
 			.objectStore('centralPark')
 			.put(objectRecord)
 
+			//handle IDBrequest object
 			putRequest = function(event){
 				console.log('Successfully updated', event.target.result);
 			}
