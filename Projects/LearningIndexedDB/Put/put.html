@@ -1,50 +1,47 @@
 <script>
-var db;
 var friendsData = [
-  {
-    name: "Ross",
-    email: "Ross@gmail.com",
-    phone: "723-222-4533"
-  },
-  {
-    name: "Rachel",
-    email: "Rachel@hotmail.com",
-    phone: "214-333-4910"
-  },
-  {
-    name: "Joey",
-    email: "Joey@yahoo.com",
-    phone: "340-330-8004"
-  },
-  {
-    name: "Phoebe",
-    email: "Phoebe@outlook.com",
-    phone: "530-320-1830"
-  },
-  {
-    name: "Chandler",
-    email: "Chandler@bing.com",
-    phone: "694-309-3821"
-  },
-  {
-    name: "Monica",
-    email: "Monica@ilikefood.com",
-    phone: "222-312-9283"
-  }
+	{
+		name:'Ross',
+		email:'Ross@gmail.com',
+		phone: '214-373-2910'
+	},
+	{
+		name:'Chandler',
+		email: 'CBing@bing.com',
+		phone:'382-789-9123'
+	},
+	{
+		name:'Rachel',
+		email:'Rachel@yahoo.com',
+		phone:'213-210-2934'
+	},
+	{
+		name:'Phoebe',
+		email: 'Phoebe@stinkycat.net',
+		phone:'628-712-2391'
+	},
+	{
+		name:'Monica',
+		email:'foodluvr@hotmail.net',
+		phone:'214-958-8123'
+	},
+	{
+		name:'Joey',
+		email:'howyoudoing@gmail.com',
+		phone:'218-289-8231'
+
+	}
 ];
 
-var openRequest = window.indexedDB.open("mango", 1);
+var openRequest = window.indexedDB.open('friendsDB', 1);
 
-openRequest.onsuccess = function(event) {
-  db = event.target.result;
-};
-
-openRequest.onerror = function(event) {
-  console.log(event.target.errorCode);
-};
+openRequest.onsuccess = function(event){
+	var db = event.target.result;
+}
 
 openRequest.onupgradeneeded = function(event) {
-  db = event.target.result;
+  var db = event.target.result;
+  console.log(db)
   var objectStore = db.createObjectStore("centralPark", {
     autoIncrement: true,
     keyPath: "myKey"
@@ -55,66 +52,38 @@ openRequest.onupgradeneeded = function(event) {
   }
 };
 
-/*
-updateRecord takes the newDataObj with modified
-values and the key of the record to modify
-*/
+function updateData(dataObj, key){
+	var openRequest = window.indexedDB.open('friendsDB', 1);
+	var {name, email, phone} = dataObj;
 
-//notice here how he does a open request to get the DB
-function updateRecord(newDataObj, key) {
-  // destructure the newData object into variables
-  var { name, email, phone } = newDataObj;
-  console.log(newDataObj, 'is the new Data Obj')
+	openRequest.onsuccess = function(event){
+		var db = event.target.result;
+		var getRequest = db
+			.transaction('centralPark', 'readwrite')
+			.objectStore('centralPark')
+			.get(key)
 
-  //Open the database again.
-  var openRequest = window.indexedDB.open("mango", 1);
+		getRequest.onsuccess = function(event){
+			var objectRecord = event.target.result;
 
-  // once db is open successfully do stuff
-  openRequest.onsuccess = function() {
-    // store result (could keep reassigning to global db if you want to)
-    var db = openRequest.result;
+			if(name){objectRecord.name = name;}
+			if(email){objectRecord.email = email;}
+			if(phone){objectRecord.phone = phone;}
 
-    // retrieve record to edit from db
-    var getRequest = db
-      .transaction("centralPark", "readwrite")
-      .objectStore("centralPark")
-      .get(key);
+			var putRequest = db
+			.transaction('centralPark', 'readwrite')
+			.objectStore('centralPark')
+			.put(objectRecord)
 
-    // if get is successful do stuff
-    getRequest.onsuccess = function() {
-      // getRequest == event.target
-      console.log("getRequest.result:", getRequest.result);
-
-      // store the returned db record object
-      // getRequest is a IDBrequest object, which has a result
-      // parameter. The result after using get is the entire
-      // object record. So data is set to an object. 
-      // we can use that to change the individual properties
-      // on the ojbect
-      var data = getRequest.result;
-      console.log(data)
-
-      // edit the object data but don't mess with the key at all
-      if (name) {data.name = name;}
-      if (email) {data.email = email;}
-      if (phone) {data.phone = phone;}
-
-      // initiate a transaction for the put operation
-      var putRequest = db
-        .transaction("centralPark", "readwrite")
-        .objectStore("centralPark")
-        .put(data);
-
-      putRequest.onsuccess = function(event) {
-        console.log(`successfully updated record with primary key: ${event.target.result}`);
-        // probably call your update function here after the new record is updated
-      };
-    };
-  };
+			putRequest = function(event){
+				console.log('Successfully updated', event.target.result);
+			}
+		}
+	}
 }
 
-// would probably put these calls inside of an event handler of a "edit" button or something
+//run this example: 
+//updateData({name:'Steve', email:'steve@gmail.com'}, 1);
 
-// updateRecord({ name: "Chris" }, 1);
-updateRecord({ email: "ILoveChandler.com" }, 6);
+
 </script>
