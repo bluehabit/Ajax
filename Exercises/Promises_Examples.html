@@ -1,0 +1,182 @@
+<script>
+// //example 1
+// 	var p1 = new Promise(function(resolve, reject){
+// 		var randomNumber = Math.random();
+
+// 		if(randomNumber > .5){
+// 			resolve([1,2,3,4,5]);
+// 		} else {
+// 			reject('ERROR');
+// 		}
+// 	});
+
+// 	p1.then(function(arr){
+// 		console.log('Promise 1 resolved with data:', arr);
+// 	}).catch(function(data){
+// 		console.log('Promise p1  was rejected with dat:', data)
+// 	});
+
+// 	// 50/50 chance of reject or resolve being called
+
+
+// //example 2: async 
+// var myPromise = new Promise(function(resolve, reject){
+// 	//new promise  object gets created right away
+// 	setTimeout(function(){
+// 		//this code will be executed 2 seconds later
+// 		var randomInt = Math.floor(Math.random() * 10);
+// 		resolve(randomInt);
+// 	}, 2000);
+// });
+
+// myPromise.then(function(data){
+// 	console.log('Random int passed to resolve:', data);
+// })
+
+
+// //example 3: nested async callbacks - messy
+// //we have callbacks that depend on other callbacks
+
+// var counter = 0;
+// setTimeout(function(){
+// 	counter++;
+// 	console.log('Counter:', counter);
+// 	setTimeout(function(){
+// 		counter++;
+// 		console.log('Counter:', counter);
+// 		setTimeout(function(){
+// 			counter++;
+// 			console.log('Counter:', counter);
+// 		}, 3000);
+// 	}, 2000);
+// }, 1000);
+
+//example 4: promise chaining - combinbing async tasks into a chain of promises
+
+//allows multiple .then functions to be chained to a promise,
+//if a previous callback within .then returns a promise, the next
+//callback within .then will wait for previous promise to be resolved
+
+//our original promise that we kick off
+var promise = new Promise(function(resolve, reject){
+	setTimeout(function(){
+		var randomInt = Math.floor(Math.random() * 10);
+		resolve(randomInt);
+	}, 500);
+});
+
+promise.then(function(data){
+	console.log('Random int passed to resolve', data);
+
+	//on resolve, we then return a new promise and handle that one
+	return new Promise(function(resolve, reject){
+		setTimeout(function(){
+			resolve(Math.floor(Math.random() * 10));
+		}, 3000)
+	});
+}).then(function(data){
+	console.log('Second random int passed to resolve', data);
+	return new Promise(function(resolve, reject){
+		setTimeout(function(){
+			resolve(Math.floor(Math.random() * 3));
+		}, 1000)
+	})
+}).then(function(data){
+	console.log('Third random int passed to resolve', data)
+})
+
+//Example 5, w/ error chance and handling it
+
+var promise = new Promise(function(resolve, reject){
+	setTimeout(function(){
+		var randomNum = Math.random();
+		if(randomNum > .02){
+			var randomInt = Math.floor(Math.random() * 10);
+			resolve(randomInt);
+		} else {
+			reject('There was an error on the ORIGINAL promise')
+		}
+	}, 500);
+});
+
+promise.then(function(data){
+	console.log('Random int passed to resolve', data);
+
+	//on resolve, we then return a new promise and handle that one
+	return new Promise(function(resolve, reject){
+		setTimeout(function(){
+			var randomNum = Math.random();
+			if(randomNum > .73){
+				resolve(Math.floor(Math.random() * 10));
+			} else {
+				reject('There was an error on the SECOND promise');
+			}
+		}, 3000)
+	});
+}).then(function(data){
+	console.log('Second random int passed to resolve', data);
+	return new Promise(function(resolve, reject){
+		setTimeout(function(){
+			var randomNum = Math.random();
+			if(randomNum > .5){
+				resolve(Math.floor(Math.random() * 3));
+			} else {
+				reject('There was an error on the THIRD promise');
+			}
+		}, 1000)
+	})
+}).then(function(data){
+	console.log('Third random int passed to resolve', data)
+}).catch(function(error){
+	console.log(error)
+})
+
+//example 6
+//promises are not the only thing that can return from inside a .then
+//callback though, a promise callback can also return values. The values
+//returned from the previous .then will be passed into the next then 
+//as a parameter
+
+var anotherPromise = new Promise(function(resolve, reject){
+	resolve(5);
+});
+
+anotherPromise.then(function(data){
+	console.log(data)
+	return data * 2;
+}).then(function(data){
+	console.log(data)
+	return data + 20;
+}).then(function(data){
+	console.log(data);
+})
+
+//example 7 refactoring our nested callback example using promises
+
+//runLater at the end RETURNS a new promise that we can attach
+//a .then or .catch too , the goal is to turn a normal setTimeout call
+//into a 'promisified' setTimeoutcall
+
+var counter = 0;
+function incCounter(){
+	counter++;
+	console.log('Counter:', counter);
+}
+
+function runLater(callback, timeInMs){
+	var p = new Promise(function(resolve, reject){
+		setTimeout(function(){
+			var res = callback();
+			resolve(res);
+		}, timeInMs);
+	});
+	return p;
+}
+
+runLater(incCounter, 1000).then(function(){
+	return runLater(incCounter, 2000);
+}).then(function(){
+	return runLater(incCounter, 3000);
+})
+
+</script>
