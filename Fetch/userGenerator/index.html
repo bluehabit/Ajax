@@ -1,0 +1,70 @@
+<button>click me</button>
+
+<script>
+
+//example 1
+var url = 'https://api.coindesk.com/v1/bpi/currentprice.json';
+
+//Chaining .then
+
+//attach point 1
+fetch(url)
+.then(function(response){
+	//returns a promise
+	return response.json()
+	.then(function(data){
+		console.log(data);
+	})
+});
+
+//attach point 2 (preferred method)
+fetch(url)
+.then(function(response){
+	//returns a promise
+	return response.json()
+}).then(function(data){
+	console.log(data.bpi.EUR.rate);
+});
+
+
+
+//instead of checking if a status code is 200
+//use the built in property .ok 
+
+//returns from the .then functions passes data
+//to the next .then in the chain! 
+
+//example 2
+
+var btn = document.querySelector('button');
+
+btn.addEventListener('click', function(){
+	var url = 'https://api.github.com/users/colt';
+	fetch(url)
+	.then(handleError)
+	.then(function(response){
+		return response.json()
+	})
+	.then(function(data){s
+		console.log('Welcome', data.name)
+	})
+	.catch(function(error){
+		console.log(error)
+	})
+});
+
+function handleError(response){
+	if(!response.ok){
+		//for example 404 error
+		throw Error(response.status)
+	}
+	//all return statements in .then() are passed on
+	//to the next .then()
+	return response;
+}
+
+
+//instead of checking request.statusCode = 200 or something like that, we will use the built in property .ok. What we will do
+//is put this in its own .then 
+
+</script>
