@@ -1,70 +1,146 @@
-<button>click me</button>
+<h1 class="title"> Random User Generator</h1>
+<div class="user-profile">
+	<img id="avatar" src="" />
+    <div id="fullname">Jon Snow</div>
+  <div id="username">
+  	kingofnorth
+  </div>
+    <div class="description">
+      <div>Email: <span id="email">jon@hotmail.com</span></div>
+      <div>City: <span id="city">Winterfell</span></div>
+  </div>
+  <div class="footer">
+    <button id="btn">Next User!</button>
+ </div>
+</div>
 
-<script>
+<style>
+/* CSS design originally by @jofpin, tweaked by Colt Steele */
+@import url(https://fonts.googleapis.com/css?family=Raleway|Varela+Round|Coda);
 
-//example 1
-var url = 'https://api.coindesk.com/v1/bpi/currentprice.json';
+body {
+  background: #ecf0f1;
+  padding: 2.23em;
+}
 
-//Chaining .then
+.title {
+  color: #2c3e50;
+  font-family: "Coda", sans-serif;
+  text-align: center;
+}
+.user-profile {
+  margin: auto;
+  width: 27em; 
+  height: 11em;
+  background: #fff;
+  border-radius: .3em;
+}
 
-//attach point 1
-fetch(url)
-.then(function(response){
-	//returns a promise
-	return response.json()
-	.then(function(data){
-		console.log(data);
-	})
-});
+.user-profile  #fullname {
+  margin: auto;
+  margin-top: -4.40em;
+  margin-left: 5.80em;
+  color: #16a085;
+  font-size: 1.53em;
+  font-family: "Coda", sans-serif;
+  font-weight: bold;
+}
 
-//attach point 2 (preferred method)
-fetch(url)
-.then(function(response){
-	//returns a promise
-	return response.json()
-}).then(function(data){
-	console.log(data.bpi.EUR.rate);
-});
+#username {
+  margin: auto;
+  display: inline-block;
+  margin-left: 10.43em;
+  color: #3498db;
+  font-size: .87em;
+  font-family: "varela round", sans-serif;
+}
 
+.user-profile > .description {
+  margin: auto;
+  margin-top: 1.35em;
+  margin-right: 3em;
+  width: 18em;
+  color: #7f8c8d;
+  font-size: .87em;
+  font-family: "varela round", sans-serif;
+}
 
-
-//instead of checking if a status code is 200
-//use the built in property .ok 
-
-//returns from the .then functions passes data
-//to the next .then in the chain! 
-
-//example 2
-
-var btn = document.querySelector('button');
-
-btn.addEventListener('click', function(){
-	var url = 'https://api.github.com/users/colt';
-	fetch(url)
-	.then(handleError)
-	.then(function(response){
-		return response.json()
-	})
-	.then(function(data){s
-		console.log('Welcome', data.name)
-	})
-	.catch(function(error){
-		console.log(error)
-	})
-});
-
-function handleError(response){
-	if(!response.ok){
-		//for example 404 error
-		throw Error(response.status)
-	}
-	//all return statements in .then() are passed on
-	//to the next .then()
-	return response;
+.user-profile > img#avatar {
+  padding: .7em;
+  margin-left: .3em;
+  margin-top: .3em;
+  height: 6.23em;
+  width: 6.23em;
+  border-radius: 18em;
 }
 
 
-//instead of checking request.statusCode = 200 or something like that, we will use the built in property .ok. What we will do
-//is put this in its own .then 
+.footer {
+  margin: 2em auto;
+  height: 3.70em;
+  background: #16a085;
+  text-align: center;
+  border-radius: 0 0 .3em .3em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background 0.1s;
+}
+
+button {
+  color: white;
+  font-family: "Coda", sans-serif;
+  text-align: center;
+  font-size: 20px;
+  background: none;
+  outline: none;
+  border: 0;
+}
+
+.footer:hover {
+  background: #1abc9c;
+}
+</style>
+
+<script>
+
+var button = document.getElementById('btn');
+
+button.addEventListener('click', function(){
+  var url = 'https://randomuser.me/api/';
+  fetch(url)
+  .then(handleErrors)
+  .then(parseJSON)
+  .then(updateData)
+})
+
+
+function handleErrors(response){
+  if(!response.ok){
+    throw Error(response.status);
+  }
+  return response;
+}
+
+function parseJSON(response){
+  return response.json();
+}
+
+function updateData(data){
+  data = data.results[0];
+  var nameFormal = document.getElementById('fullname');
+  var userName = document.getElementById('username');
+  var userEmail = document.getElementById('email');
+  var userCity = document.getElementById('city');
+  var userAvatar = document.getElementById('avatar');
+
+  nameFormal.textContent = data.name.first + ' ' + data.name.last;
+  userName.textContent = data.login.username;
+  userEmail.textContent = data.email;
+  userCity.textContent = data.location.city;
+  userAvatar.src = data.picture.medium;
+}
+
+
 
 </script>
