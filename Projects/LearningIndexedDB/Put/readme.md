@@ -1,6 +1,6 @@
 ## Description
 
-Using `put` to update **specific** properties on an object. If you do not configure `put` in this manner it will override the entire record. Which may or may not be something you desire.
+Using `put` to update **specific** properties on an object. If you do not configure `put` in this manner it will override the entire record. Which may or may not be something you desire. `put_global_db` uses a global `db` variable to store the `db` so we do not have to open a request every time we want to conduct a transaction. 
 
 
 ## Before
