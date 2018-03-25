@@ -1,0 +1,74 @@
+<script>
+var friendsData = [
+	{
+		name:'Ross',
+		email:'Ross@gmail.com',
+		phone: '214-373-2910'
+	},
+	{
+		name:'Chandler',
+		email: 'CBing@bing.com',
+		phone:'382-789-9123'
+	},
+	{
+		name:'Rachel',
+		email:'Rachel@yahoo.com',
+		phone:'213-210-2934'
+	},
+	{
+		name:'Phoebe',
+		email: 'Phoebe@stinkycat.net',
+		phone:'628-712-2391'
+	},
+	{
+		name:'Monica',
+		email:'foodluvr@hotmail.net',
+		phone:'214-958-8123'
+	},
+	{
+		name:'Joey',
+		email:'howyoudoing@gmail.com',
+		phone:'218-289-8231'
+
+	}
+];
+
+var openRequest = window.indexedDB.open('friendsDB', 1);
+
+openRequest.onsuccess = function(event){
+	var db = event.target.result;
+}
+
+openRequest.onupgradeneeded = function(event) {
+  var db = event.target.result;
+  console.log(db)
+  var objectStore = db.createObjectStore("centralPark", {
+    autoIncrement: true
+  });
+
+  for (var prop in friendsData) {
+    objectStore.add(friendsData[prop]);
+  }
+};
+
+
+function getAllKeys(){
+	var openRequest = window.indexedDB.open('friendsDB', 1);
+
+	openRequest.onsuccess = function(event){
+		var db = event.target.result;
+		var transaction = db.transaction('centralPark', 'readwrite');
+		var objectStore = transaction.objectStore('centralPark');
+		var request = objectStore.getAll();
+
+		request.onsuccess = function(event){
+			if(request.result){
+				console.log(request.result);
+			}
+		}
+	}
+}
+
+//getAllKeys(); (6)[{...}]
+
+</script>
