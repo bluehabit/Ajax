@@ -1,0 +1,35 @@
+<script>
+
+if(!document.cookie){
+	console.log('persistent cookie created!');
+	document.cookie = 'site_visited=true;max-age=60*60*24*365';
+	
+	var url = 'http://ws.audioscrobbler.com/2.0/?method=chart.gettoptracks&api_key=72e95c0480c223e61f4c16d885ad8638&format=json';
+
+	fetch(url)
+	.then(handleErrors)
+	.then(parseJSON)
+	.then(generateAlbums)
+
+}
+
+function handleErrors(response){
+	if(!response.ok){
+		throw Error(response.status);
+	}
+	return response;
+}
+
+function parseJSON(response){
+	return response.json()
+}
+
+function generateAlbums(data){
+	for(var i = 0; i < 10, i++){
+		console.log(data.name)
+		console.log()
+	}
+}
+
+
+</script>
