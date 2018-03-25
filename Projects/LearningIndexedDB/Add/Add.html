@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+
+</body>
+</html>
+
+<script>
+
+
+
+var db;
+var friendsData = [
+  {
+    name: "Ross",
+    email: "Ross@gmail.com",
+    phone: "723-222-4533"
+  },
+  {
+    name: "Rachel",
+    email: "Rachel@hotmail.com",
+    phone: "214-333-4910"
+  },
+  {
+    name: "Joey",
+    email: "Joey@yahoo.com",
+    phone: "340-330-8004"
+  },
+  {
+    name: "Phoebe",
+    email: "Phoebe@outlook.com",
+    phone: "530-320-1830"
+  },
+  {
+    name: "Chandler",
+    email: "Chandler@bing.com",
+    phone: "694-309-3821"
+  },
+  {
+    name: "Monica",
+    email: "Monica@ilikefood.com",
+    phone: "222-312-9283"
+  }
+];
+
+var openRequest = window.indexedDB.open('mango', 1);
+
+openRequest.onsuccess = function(event){
+  db = event.target.result;
+  // updateRecord(db,1);
+}
+
+openRequest.onerror = function(event){
+  console.log(event.target.errorCode);
+}
+
+openRequest.onupgradeneeded = function(event){
+  db = event.target.result;
+  var objectStore = db.createObjectStore("centralPark", {
+    autoIncrement: true,
+    keyPath: "myKey"
+  });
+
+  for(var prop in friendsData){
+    objectStore.add(friendsData[prop]);
+  }
+}
+
+function addUser(friendName, email, phone){
+   var request = db
+    .transaction("centralPark", "readwrite")
+    .objectStore("centralPark")
+    .add({ name: friendName, email: email, phone:phone});
+    console.log(request, 'is the request')
+
+	request.onsuccess = function(event){
+		console.log(event, 'is the event');
+    console.log(event.target, 'is the target')
+		console.log(event.target.result, 'is the result');
+	}
+}
+
+//addUser('Chris', 'Chris@gmail.com', '682-239-3600')
+
+</script>
