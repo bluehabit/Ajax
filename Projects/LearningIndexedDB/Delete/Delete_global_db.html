@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+
+</body>
+</html>
+
+<script>
+
+//this example shows how if we use .getKey() and provide a key
+//once we handle that IDBrequest / transaction, on success the 
+//event.target.result (which holds the value of IDBrequest.result)
+//will hold the value of the entire record we are looking for.
+ 
+var db;
+var friendsData = [
+  {
+    name: "Ross",
+    email: "Ross@gmail.com",
+    phone: "723-222-4533"
+  },
+  {
+    name: "Rachel",
+    email: "Rachel@hotmail.com",
+    phone: "214-333-4910"
+  },
+  {
+    name: "Joey",
+    email: "Joey@yahoo.com",
+    phone: "340-330-8004"
+  },
+  {
+    name: "Phoebe",
+    email: "Phoebe@outlook.com",
+    phone: "530-320-1830"
+  },
+  {
+    name: "Chandler",
+    email: "Chandler@bing.com",
+    phone: "694-309-3821"
+  },
+  {
+    name: "Monica",
+    email: "Monica@ilikefood.com",
+    phone: "222-312-9283"
+  }
+];
+
+var openRequest = window.indexedDB.open('mango', 1);
+
+openRequest.onsuccess = function(event){
+	db = event.target.result;
+}
+
+openRequest.onerror = function(event){
+	console.log(event.target.errorCode);
+}
+
+openRequest.onupgradeneeded = function(event){
+	db = event.target.result;
+	var objectStore = db.createObjectStore("centralPark", {
+    autoIncrement: true, 
+    keyPath: "mykey"
+  });
+
+	for(var prop in friendsData){
+		objectStore.add(friendsData[prop]);
+	}
+}
+
+function checkKey(db, key){
+  //new transaction to 'get' something, e.g. read in CRUD
+  var request = db
+  .transaction('centralPark', 'readwrite')
+  .objectStore('centralPark')
+  .get(key)
+
+  //handling IDBrequest object,
+  //its event.target.result should have what we are looking for
+  request.onsuccess = function(event){
+    console.log(event.target.result)
+  }
+}
+
+
+function delKey(key){
+  //new transaction to 'get' something, e.g. read in CRUD
+  var request = db
+  .transaction('centralPark', 'readwrite')
+  .objectStore('centralPark')
+  .delete(key)
+
+  //handling IDBrequest object,
+  //its event.target.result should have what we are looking for
+  request.onsuccess = function(event){
+    console.log(event.target.result)
+  }
+}
+
+setTimeout(function(){
+	checkKey(db,1)
+},200)
+console.log('hey!')
+
+//delKey(1) removes the record below;
+//{name: "Ross", email: "Ross@gmail.com", phone: "723-222-4533", mykey: 1}
+
+
+
+</script>
