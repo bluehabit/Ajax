@@ -17,3 +17,10 @@ example: `https://api.sunrise-sunset.org/json?lat=36.7201600&lng=-4.4203400`
 ![f](https://imgur.com/yRFW8ER.png)
 
 ### Open Movie Database
+
+
+### Last.fm
+
+`72e95c0480c223e61f4c16d885ad8638`
+
+example: `http://ws.audioscrobbler.com/2.0/?method=chart.gettoptracks&api_key=72e95c0480c223e61f4c16d885ad8638&format=json`
